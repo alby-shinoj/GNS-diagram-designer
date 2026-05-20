@@ -1,2 +1,8 @@
 # GNS-diagram-designer
-JSON data    ↓ WPF Canvas    ↓ Shapes, text, and connections shown directly in the editor
+Diagram data in ViewModel
+↓
+WPF data binding
+↓
+Canvas displays nodes, text, and connections
+↓
+User edits directly on the same canvas
