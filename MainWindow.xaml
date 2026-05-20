@@ -1,0 +1,193 @@
+<Window x:Class="GsnDiagramEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:GsnDiagramEditor.Views"
+        xmlns:models="clr-namespace:GsnDiagramEditor.Models"
+        Title="GSN Diagram Editor" Height="900" Width="1550"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="{StaticResource AppBackgroundBrush}">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="White" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,0,0,1">
+            <Grid Margin="10,7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBlock Text="GSN Diagram Editor" FontWeight="Bold" FontSize="17" Foreground="{StaticResource TextMainBrush}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                    <Button Content="New" Command="{Binding NewProjectCommand}" />
+                    <Button Content="Open" Command="{Binding OpenProjectCommand}" />
+                    <Button Content="Save" Command="{Binding SaveProjectCommand}" Style="{StaticResource PrimaryButton}" />
+                    <Button Content="Export DOT" Command="{Binding ExportDotCommand}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                    <Button Content="Undo" Command="{Binding UndoCommand}" />
+                    <Button Content="Redo" Command="{Binding RedoCommand}" />
+                    <Button Content="Delete" Command="{Binding DeleteSelectedCommand}" />
+                    <Button Content="Auto Layout" Command="{Binding AutoLayoutCommand}" />
+                    <ToggleButton Content="Connect" IsChecked="{Binding IsConnectMode}" Margin="8,3" Padding="10,6" />
+                    <CheckBox Content="Snap" IsChecked="{Binding SnapToGrid}" VerticalAlignment="Center" Margin="8,0" />
+                    <TextBlock Text="Zoom" VerticalAlignment="Center" Margin="10,0,4,0" />
+                    <Slider Width="135" Minimum="0.35" Maximum="2.2" Value="{Binding Zoom}" TickFrequency="0.05" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ZoomPercent}" VerticalAlignment="Center" Margin="6,0,0,0" Foreground="{StaticResource TextMutedBrush}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <TextBlock Text="Project" VerticalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" />
+                    <TextBox Width="235" Margin="8,0,0,0" Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border DockPanel.Dock="Bottom" Background="White" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,1,0,0" Padding="10,5">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextMutedBrush}" />
+        </Border>
+
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="145" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="265" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{StaticResource PanelBackgroundBrush}" CornerRadius="8" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" Padding="8" Margin="0,0,8,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Tools" FontWeight="Bold" FontSize="15" Margin="0,0,0,8" />
+                        <Button Content="Goal" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Goal}" />
+                        <Button Content="Strategy" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Strategy}" />
+                        <Button Content="Evidence" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Solution}" />
+                        <Button Content="Context" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Context}" />
+                        <Button Content="Text" Command="{Binding AddTextCommand}" Style="{StaticResource PrimaryButton}" />
+
+                        <Separator Margin="0,10" />
+                        <Expander Header="More GSN" IsExpanded="False">
+                            <StackPanel Margin="0,8,0,0">
+                                <Button Content="Assumption" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Assumption}" />
+                                <Button Content="Justification" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Justification}" />
+                                <Button Content="Undeveloped" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.UndevelopedGoal}" />
+                                <Button Content="Module" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Module}" />
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander Header="Basic Shapes" IsExpanded="False" Margin="0,8,0,0">
+                            <StackPanel Margin="0,8,0,0">
+                                <Button Content="Rectangle" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Rectangle}" />
+                                <Button Content="Round Rect" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.RoundedRectangle}" />
+                                <Button Content="Circle" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Circle}" />
+                                <Button Content="Ellipse" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Ellipse}" />
+                                <Button Content="Diamond" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Diamond}" />
+                                <Button Content="Para" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Parallelogram}" />
+                                <Button Content="Note" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Note}" />
+                                <Button Content="Folder" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Folder}" />
+                                <Button Content="Component" Command="{Binding AddNodeCommand}" CommandParameter="{x:Static models:NodeType.Component}" />
+                            </StackPanel>
+                        </Expander>
+
+                        <Separator Margin="0,10" />
+                        <TextBlock Text="Tip" FontWeight="Bold" />
+                        <TextBlock Text="Double-click empty canvas to place free text there. Drag items to move them." TextWrapping="Wrap" Foreground="{StaticResource TextMutedBrush}" Margin="0,5,0,0" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="1" Background="White" CornerRadius="8" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" Padding="6">
+                <views:EditorCanvas />
+            </Border>
+
+            <Border Grid.Column="2" Background="{StaticResource PanelBackgroundBrush}" CornerRadius="8" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" Padding="10" Margin="8,0,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Properties" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Selected Item" FontWeight="SemiBold" />
+                        <TextBlock Text="No node selected" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,10">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedNode}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <StackPanel DataContext="{Binding SelectedNode}">
+                            <TextBlock Text="Text / Title" />
+                            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="65" TextWrapping="Wrap" />
+
+                            <TextBlock Text="Notes" />
+                            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+
+                            <TextBlock Text="Type" />
+                            <ComboBox ItemsSource="{Binding DataContext.NodeTypes, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="Width" />
+                                    <TextBox Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="Height" />
+                                    <TextBox Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="X" />
+                                    <TextBox Text="{Binding X, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="Y" />
+                                    <TextBox Text="{Binding Y, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Fill Color HEX" />
+                            <TextBox Text="{Binding FillColor, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Text="Border Color HEX" />
+                            <TextBox Text="{Binding BorderColor, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Text="Text Color HEX" />
+                            <TextBox Text="{Binding TextColor, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Text="Font Size" />
+                            <TextBox Text="{Binding FontSize, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+
+                        <Separator Margin="0,12" />
+                        <TextBlock Text="Connection" FontWeight="SemiBold" />
+                        <StackPanel DataContext="{Binding SelectedConnection}">
+                            <TextBlock Text="Label" />
+                            <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Line Color HEX" />
+                            <TextBox Text="{Binding LineColor, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Thickness" />
+                            <TextBox Text="{Binding Thickness, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Arrow Head" />
+                            <TextBox Text="{Binding ArrowHead, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox Content="Dashed line" IsChecked="{Binding IsDashed}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
